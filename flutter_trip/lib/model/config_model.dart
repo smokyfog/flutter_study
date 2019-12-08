@@ -11,4 +11,8 @@ class ConfigModel {
     );
   }
 
+  Map<String, dynamic> toJson() {
+    return { searchUrl: searchUrl };
+  }
+
 }
