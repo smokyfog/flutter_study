@@ -96,11 +96,36 @@ class _SearchBarState extends State<SearchBar> {
           ),
           Expanded(
             flex: 1,
-            child: widget.searchBarType == SearchBarType.normal,
+            child: widget.searchBarType == SearchBarType.normal
+              ? TextField(
+                controller: _controller,
+                onChanged: _onChanged,
+                autofocus: true,
+                style: TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.black,
+                  fontWeight: FontWeight.w300
+                ),
+                decoration: InputDecoration(
+                  contentPadding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                  border: InputBorder.none,
+                  hintText: widget.hint ?? '',
+                  hintStyle: TextStyle(fontSize: 15)
+                ),
+               )
+              : _wrapTap(
+                Container(
+                  child: Text(
+                    widget.defaultText,
+                    style: TextStyle(fontSize: 13, color: Colors.grey),
+                  ),
+                ),
+                widget.inputBoxClick
+              )
           )
         ],
       ),
-    )
+    );
   }
   _wrapTap(Widget child, void Function() callback) {
     return GestureDetector(
@@ -109,6 +134,20 @@ class _SearchBarState extends State<SearchBar> {
       },
       child: child,
     );
+  }
+  _onChanged(String text) {
+    if (text.length > 0) {
+      setState(() {
+        showClear = true;
+      });
+    } else {
+      setState(() {
+        showClear = false;
+      });
+    }
+    if (widget.onChanged != null) {
+      widget.onChanged(text);
+    }
   }
 
 }
