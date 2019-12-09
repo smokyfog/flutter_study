@@ -14,15 +14,21 @@ class SearchBar extends StatefulWidget {
   final ValueChanged<String> onChanged;
 
 
-  SearchBar(this.enabled, this.hideLeft, this.searchBarType, this.hint,
-      this.defaultText, this.leftButtonClick, this.rightButtonClick,
-      this.speakClick, this.inputBoxClick, this.onChanged);
+  SearchBar({
+    this.enabled = true,
+    this.hideLeft,
+    this.searchBarType = SearchBarType.normal,
+    this.hint,
+    this.defaultText,
+    this.leftButtonClick,
+    this.rightButtonClick,
+    this.speakClick,
+    this.inputBoxClick,
+    this.onChanged
+  });
 
   @override
-  State<StatefulWidget> createState() {
-    // TODO: implement createState
-    return null;
-  }
+  State<StatefulWidget> createState() => _SearchBarState();
 
 }
 
@@ -51,6 +57,7 @@ class _SearchBarState extends State<SearchBar> {
         children: <Widget>[
           _wrapTap(
               Container(
+                padding: EdgeInsets.fromLTRB(6, 5, 10, 5),
               child: widget?.hideLeft??false?null:Icon(Icons.arrow_back_ios,
               color: Colors.grey,size: 26,),
             ),
@@ -75,7 +82,45 @@ class _SearchBarState extends State<SearchBar> {
     );
   }
   _genHomeSearch() {
-
+    return Container(
+      child: Row(
+        children: <Widget>[
+          _wrapTap(
+          Container(
+            padding: EdgeInsets.fromLTRB(6, 5, 5, 5),
+            child: Row(
+              children: <Widget>[
+                Text(
+                  '上海',
+                  style: TextStyle(
+                      color: _homeFontColor(),
+                      fontSize: 14
+                  ),
+                ),
+                Icon(
+                  Icons.expand_more,
+                  color: _homeFontColor(),
+                  size: 22,
+                )
+              ],
+            ),
+          ), widget.leftButtonClick),
+          Expanded(
+            flex: 1,
+            child: _inputBox(),
+          ),
+          _wrapTap(
+            Container(
+              padding: EdgeInsets.fromLTRB(10, 5, 10, 5),
+              child: Icon(
+                Icons.comment,
+                color: _homeFontColor(),
+                size: 26,
+              ),
+            ), widget.rightButtonClick)
+        ],
+      ),
+    );
   }
   _inputBox() {
     Color inputBoxColor;
@@ -85,6 +130,14 @@ class _SearchBarState extends State<SearchBar> {
       inputBoxColor = Color(int.parse('0xffEDEDED'));
     }
     return Container(
+      height: 30,
+      padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+      decoration: BoxDecoration(
+          color: inputBoxColor,
+          borderRadius: BorderRadius.circular(
+              widget.searchBarType == SearchBarType.normal ? 5 : 15
+          )
+      ),
       child: Row(
         children: <Widget>[
           Icon(
@@ -122,7 +175,32 @@ class _SearchBarState extends State<SearchBar> {
                 ),
                 widget.inputBoxClick
               )
-          )
+          ),
+          !showClear
+              ?
+              _wrapTap(
+                  Icon(
+                    Icons.mic,
+                    size: 22,
+                    color: widget.searchBarType == SearchBarType.normal
+                      ? Colors.blue
+                      : Colors.grey,
+                  ),
+                  widget.speakClick
+              )
+              :
+              _wrapTap(
+                Icon(
+                  Icons.clear,
+                  size: 22,
+                  color: Colors.grey,
+                ), (){
+                  setState(() {
+                    _controller.clear();
+                  });
+                  _onChanged('');
+                }
+              )
         ],
       ),
     );
@@ -130,7 +208,7 @@ class _SearchBarState extends State<SearchBar> {
   _wrapTap(Widget child, void Function() callback) {
     return GestureDetector(
       onTap: () {
-
+        if (callback != null) callback();
       },
       child: child,
     );
@@ -148,6 +226,13 @@ class _SearchBarState extends State<SearchBar> {
     if (widget.onChanged != null) {
       widget.onChanged(text);
     }
+  }
+
+  // 获取首页前景色
+  _homeFontColor() {
+    return widget.searchBarType == SearchBarType.homeLight
+      ? Colors.black54
+      : Colors.white;
   }
 
 }
