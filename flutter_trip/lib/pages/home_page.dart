@@ -5,6 +5,7 @@ import 'package:flutter_trip/model/common_model.dart';
 import 'package:flutter_trip/model/grid_nav_model.dart';
 import 'package:flutter_trip/model/home_model.dart';
 import 'package:flutter_trip/model/sales_box_model.dart';
+import 'package:flutter_trip/pages/search_page.dart';
 import 'package:flutter_trip/widget/grid_nav.dart';
 import 'package:flutter_trip/widget/local_nav.dart';
 import 'package:flutter_trip/widget/sales_box.dart';
@@ -236,7 +237,11 @@ class _HomePageState extends State<HomePage> {
 
   // 跳到搜索
   _jumpToSearch() {
-
+    Navigator.push(context, MaterialPageRoute(builder: (context) {
+      return SearchPage(
+        hint: SEARCH_BAR_DEFAULT_TEXT,
+      );
+    }));
   }
 
   //跳到语音
