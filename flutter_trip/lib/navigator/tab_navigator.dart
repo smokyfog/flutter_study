@@ -28,6 +28,7 @@ class _TabNavigaorState extends State<TabNavigator> {
           TravelPage(),
           MyPage(),
         ],
+        physics: NeverScrollableScrollPhysics(),  // 禁止tab左右滑动
       ),
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: _currentIndex,
